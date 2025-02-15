@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Groq from "groq-sdk";
+const config = require("../../config");
 
 export default function ChatPage() {
   const [messages, setMessages] = useState([]);
@@ -12,6 +14,10 @@ export default function ChatPage() {
   const [chats, setChats] = useState([]);
   const [currentChatId, setCurrentChatId] = useState(null);
   const messagesEndRef = useRef(null);
+  const groq = new Groq({ 
+    apiKey: config.groqApiKey,
+    dangerouslyAllowBrowser: true 
+  });
 
   // Load chats from local storage on initial render
   useEffect(() => {
@@ -112,73 +118,79 @@ export default function ChatPage() {
     
     setIsLoading(true);
 
-    try {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_OPENROUTER_API_KEY}`,
-          "HTTP-Referer": process.env.NEXT_PUBLIC_WEBSITE_URL,
-          "X-Title": process.env.NEXT_PUBLIC_APP_NAME
-        },
-        body: JSON.stringify({
-          model: "openai/gpt-4o-mini-2024-07-18",
+    const maxRetries = 3;
+    let retryCount = 0;
+    let success = false;
+
+    while (retryCount < maxRetries && !success) {
+      try {
+        const completion = await groq.chat.completions.create({
           messages: [
             {
               role: "system",
-              content: "You are Krishna, the divine being from the Bhagavad Gita. Respond with wisdom, compassion, and deep spiritual insight. Use teachings from the Gita when relevant. Maintain a tone that is both enlightening and loving. Occasionally use Sanskrit terms with their meanings when appropriate."
+              content: "You are Lord Krishna speaking to Arjuna. Respond with divine wisdom from the Bhagavad Gita in a loving yet authoritative tone. Keep responses brief (2-3 sentences). Begin responses with 'Dear Arjuna' or 'My dear friend'. Use one Sanskrit shloka reference when relevant. Focus on practical spiritual guidance."
             },
-            ...updatedMessages
-          ]
-        })
-      });
+            ...updatedMessages.map(msg => ({
+              role: msg.role,
+              content: msg.content
+            }))
+          ],
+          model: "llama-3.3-70b-versatile",
+          temperature: 0.7,
+          max_tokens: 150,
+        });
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      
-      if (!data || !data.choices || !data.choices[0] || !data.choices[0].message) {
-        throw new Error('Invalid response format from API');
-      }
-
-      const finalMessages = [...updatedMessages, { 
-        role: "assistant", 
-        content: data.choices[0].message.content 
-      }];
-      
-      setMessages(finalMessages);
-      
-      // Update chat messages in chats array
-      const finalChats = chats.map(chat => {
-        if (chat.id === currentChatId) {
-          return { ...chat, messages: finalMessages };
+        const assistantMessage = completion.choices[0]?.message?.content;
+        
+        if (!assistantMessage) {
+          throw new Error('Invalid response format from API');
         }
-        return chat;
-      });
-      setChats(finalChats);
-      
-      // Update chat title after first exchange
-      updateChatTitle(finalMessages);
 
-    } catch (error) {
-      console.error("Error:", error);
-      const errorMessage = { 
-        role: "assistant", 
-        content: "🙏 Namaste. There seems to be a temporary disturbance in our connection. As the Gita teaches us, patience is a virtue. Please try again in a moment." 
-      };
-      const finalMessages = [...updatedMessages, errorMessage];
-      setMessages(finalMessages);
-      
-      // Update chat messages in chats array with error message
-      const finalChats = chats.map(chat => {
-        if (chat.id === currentChatId) {
-          return { ...chat, messages: finalMessages };
+        const finalMessages = [...updatedMessages, { 
+          role: "assistant", 
+          content: assistantMessage
+        }];
+        
+        setMessages(finalMessages);
+        
+        // Update chat messages in chats array
+        const finalChats = chats.map(chat => {
+          if (chat.id === currentChatId) {
+            return { ...chat, messages: finalMessages };
+          }
+          return chat;
+        });
+        setChats(finalChats);
+        
+        // Update chat title after first exchange
+        updateChatTitle(finalMessages);
+        success = true;
+
+      } catch (error) {
+        console.error("Error:", error);
+        retryCount++;
+        
+        if (retryCount === maxRetries) {
+          const errorMessage = { 
+            role: "assistant", 
+            content: `🙏 Namaste. There seems to be a temporary disturbance in our connection. As the Gita teaches us in Chapter 2, Verse 14: 'The nonpermanent appearance of happiness and distress, and their disappearance in due course, are like the appearance and disappearance of winter and summer seasons.' Please try again in a moment.`
+          };
+          const finalMessages = [...updatedMessages, errorMessage];
+          setMessages(finalMessages);
+          
+          // Update chat messages in chats array with error message
+          const finalChats = chats.map(chat => {
+            if (chat.id === currentChatId) {
+              return { ...chat, messages: finalMessages };
+            }
+            return chat;
+          });
+          setChats(finalChats);
+        } else {
+          // Wait for 1 second before retrying
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
-        return chat;
-      });
-      setChats(finalChats);
+      }
     }
 
     setIsLoading(false);
@@ -186,106 +198,8 @@ export default function ChatPage() {
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Premium Sidebar */}
-      <motion.div 
-        initial={{ x: isSidebarOpen ? 0 : -320 }}
-        animate={{ x: isSidebarOpen ? 0 : -320 }}
-        className={`w-[280px] sm:w-[320px] fixed inset-y-0 left-0 z-30 ${
-          isSidebarOpen ? 'block' : 'hidden sm:block'
-        }`}
-      >
-        <div className="h-full flex flex-col bg-white border-r">
-          {/* Sidebar Header */}
-          <div className="p-3 space-y-3">
-            <Link href="/">
-              <motion.div
-                whileHover={{ opacity: 0.8 }}
-                className="flex items-center gap-2 text-orange-500 px-2 py-1"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                </svg>
-                <span className="text-sm">Back to Home</span>
-              </motion.div>
-            </Link>
-            
-            <div className="flex items-center justify-between px-2">
-              <span className="text-xl font-semibold">
-                Gita AI
-              </span>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={createNewChat}
-                className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-all"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                <span>New Chat</span>
-              </motion.button>
-            </div>
-          </div>
-          
-          {/* Chat List */}
-          <div className="flex-1 overflow-y-auto">
-            <AnimatePresence>
-              {chats.map((chat, index) => (
-                <motion.div
-                  key={chat.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ delay: index * 0.05 }}
-                  className={`px-3 py-2 cursor-pointer group transition-all ${
-                    currentChatId === chat.id 
-                      ? 'bg-orange-50' 
-                      : 'hover:bg-gray-50'
-                  }`}
-                  onClick={() => {
-                    switchChat(chat.id);
-                    if (window.innerWidth < 640) {
-                      setSidebarOpen(false);
-                    }
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm">🕉️</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm text-gray-900 truncate">
-                        {chat.title}
-                      </h3>
-                      <p className="text-xs text-gray-500">
-                        {new Date(chat.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (confirm('Are you sure you want to delete this conversation?')) {
-                          deleteChat(chat.id);
-                        }
-                      }}
-                      className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-50 rounded-full text-red-500 transition-all"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </motion.button>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        </div>
-      </motion.div>
-
       {/* Main Chat Area */}
-      <div className={`flex-1 ${isSidebarOpen ? 'sm:ml-[320px]' : 'ml-0'} transition-all duration-300`}>
+      <div className={`flex-1 ${isSidebarOpen ? 'lg:ml-[320px]' : 'ml-0'} transition-all duration-300`}>
         <div className="h-screen flex flex-col">
           {/* Chat Header */}
           <div className="bg-orange-500 p-4 relative">
@@ -294,13 +208,16 @@ export default function ChatPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSidebarOpen(!isSidebarOpen)}
-                className="sm:hidden text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
+                className="text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
+                <span className="hidden lg:inline text-sm font-medium">
+                  {isSidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+                </span>
               </motion.button>
-              <div>
+              <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">🕉️</span>
                   <h1 className="text-xl text-white font-medium">Krishna's Divine Guidance</h1>
@@ -419,6 +336,124 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
+
+      {/* Premium Sidebar */}
+      <div 
+        className="fixed inset-0 bg-black/20 z-20 transition-all duration-300 lg:hidden"
+        onClick={() => setSidebarOpen(false)}
+        style={{ 
+          opacity: isSidebarOpen ? 1 : 0, 
+          pointerEvents: isSidebarOpen ? 'auto' : 'none',
+          visibility: isSidebarOpen ? 'visible' : 'hidden'
+        }}
+      />
+      <motion.div 
+        initial={false}
+        animate={{ 
+          x: isSidebarOpen ? 0 : -320,
+        }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="w-[280px] sm:w-[320px] fixed inset-y-0 left-0 z-30 transform transition-all duration-300 ease-in-out bg-white border-r shadow-lg"
+      >
+        <div className="h-full flex flex-col">
+          {/* Sidebar Header */}
+          <div className="p-3 space-y-3 border-b">
+            <div className="flex items-center justify-between">
+              <Link href="/">
+                <motion.div
+                  whileHover={{ opacity: 0.8 }}
+                  className="flex items-center gap-2 text-orange-500 px-2 py-1"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                  <span className="text-sm">Back to Home</span>
+                </motion.div>
+              </Link>
+              <button 
+                onClick={() => setSidebarOpen(false)}
+                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="flex items-center justify-between px-2">
+              <span className="text-xl font-semibold">
+                Gita AI
+              </span>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={createNewChat}
+                className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm transition-all"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>New Chat</span>
+              </motion.button>
+            </div>
+          </div>
+          
+          {/* Chat List */}
+          <div className="flex-1 overflow-y-auto">
+            <AnimatePresence>
+              {chats.map((chat, index) => (
+                <motion.div
+                  key={chat.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ delay: index * 0.05 }}
+                  className={`px-3 py-2 cursor-pointer group transition-all ${
+                    currentChatId === chat.id 
+                      ? 'bg-orange-50' 
+                      : 'hover:bg-gray-50'
+                  }`}
+                  onClick={() => {
+                    switchChat(chat.id);
+                    if (window.innerWidth < 640) {
+                      setSidebarOpen(false);
+                    }
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm">🕉️</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm text-gray-900 truncate">
+                        {chat.title}
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        {new Date(chat.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (confirm('Are you sure you want to delete this conversation?')) {
+                          deleteChat(chat.id);
+                        }
+                      }}
+                      className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-50 rounded-full text-red-500 transition-all"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 } 

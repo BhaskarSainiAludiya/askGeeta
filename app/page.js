@@ -72,8 +72,8 @@ export default function Home() {
               </Link>
               <a 
                 href="https://github.com/varunisrani/gitaaii" 
-                target="_blank" 
-                rel="noopener noreferrer"
+            target="_blank"
+            rel="noopener noreferrer"
                 className="w-full sm:w-auto"
               >
                 <button className="w-full flex items-center justify-center gap-2 bg-white text-orange-500 px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:bg-orange-50 transition-all border-2 border-orange-200 text-base sm:text-lg font-semibold transform hover:-translate-y-0.5 group">
@@ -82,8 +82,8 @@ export default function Home() {
                   </svg>
                   GitHub
                 </button>
-              </a>
-            </div>
+          </a>
+        </div>
 
             {/* Stats or Trust Indicators */}
             <div className="mt-12 sm:mt-16 flex flex-wrap justify-center gap-8 text-center">
@@ -216,8 +216,8 @@ export default function Home() {
                 <li>
                   <a 
                     href="https://github.com/varunisrani/gitaaii" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+          target="_blank"
+          rel="noopener noreferrer"
                     className="text-gray-600 hover:text-orange-500 transition-colors text-sm inline-flex items-center gap-2"
                   >
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
