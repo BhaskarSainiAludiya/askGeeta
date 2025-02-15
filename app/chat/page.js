@@ -117,9 +117,9 @@ export default function ChatPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer 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",
-          "HTTP-Referer": "https://gitaaii.vercel.app/",
-          "X-Title": "Gita AI"
+          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_OPENROUTER_API_KEY}`,
+          "HTTP-Referer": process.env.NEXT_PUBLIC_WEBSITE_URL,
+          "X-Title": process.env.NEXT_PUBLIC_APP_NAME
         },
         body: JSON.stringify({
           model: "openai/gpt-4o-mini-2024-07-18",

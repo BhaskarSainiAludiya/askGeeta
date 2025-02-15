@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -20,9 +21,9 @@ export default function Home() {
             <a href="#features" className="text-gray-600 hover:text-orange-500 transition-colors text-sm font-medium">Features</a>
             <a href="#about" className="text-gray-600 hover:text-orange-500 transition-colors text-sm font-medium">About</a>
             <a href="#pricing" className="text-gray-600 hover:text-orange-500 transition-colors text-sm font-medium">Pricing</a>
-            <button className="bg-orange-500 text-white px-6 py-2.5 rounded-full hover:bg-orange-600 transition-all shadow-lg hover:shadow-orange-200 text-sm font-medium">
+            <Link href="/chat" className="bg-orange-500 text-white px-6 py-2.5 rounded-full hover:bg-orange-600 transition-all shadow-lg hover:shadow-orange-200 text-sm font-medium">
               Get Started
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -30,24 +31,74 @@ export default function Home() {
       <main>
         {/* Hero Section */}
         <section className="pt-28 sm:pt-32 pb-16 sm:pb-20 px-4 relative overflow-hidden">
+          {/* Background Effects */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200%] sm:w-[1000px] h-[1000px] bg-gradient-to-b from-orange-100/50 to-transparent rounded-full blur-3xl -z-10 opacity-50"></div>
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5"></div>
+          
           <div className="max-w-5xl mx-auto text-center">
-            <div className="inline-block px-4 py-1.5 bg-orange-50 rounded-full text-orange-600 text-sm font-medium mb-6 sm:mb-8">
-              Discover Timeless Wisdom Through AI
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-full text-orange-600 text-sm font-medium mb-6 sm:mb-8 shadow-sm">
+              <span className="text-xl">🕉️</span>
+              <span>Discover Timeless Wisdom Through AI</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400 bg-clip-text text-transparent leading-tight px-4">
-              Experience Divine Guidance Through Advanced AI Technology
+
+            {/* Main Title */}
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 sm:mb-8 tracking-tight">
+              <div className="flex flex-col items-center gap-2 sm:gap-3">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400">
+                  Experience Divine Guidance
+                </span>
+                <span className="text-3xl sm:text-4xl lg:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-orange-400 font-bold">
+                  Through Advanced AI
+                </span>
+              </div>
             </h1>
-            <p className="text-lg sm:text-xl text-gray-600 mb-8 sm:mb-12 max-w-3xl mx-auto px-4">
-              Immerse yourself in the profound wisdom of the Bhagavad Gita through intelligent conversations. Receive personalized spiritual guidance powered by cutting-edge AI.
+
+            {/* Description */}
+            <p className="text-lg sm:text-xl text-gray-600 mb-8 sm:mb-12 max-w-3xl mx-auto px-4 leading-relaxed">
+              Immerse yourself in the profound wisdom of the <span className="text-orange-600 font-medium">Bhagavad Gita</span> through intelligent conversations. 
+              Receive personalized spiritual guidance powered by <span className="text-orange-600 font-medium">cutting-edge AI technology</span>.
             </p>
+
+            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
-              <button className="w-full sm:w-auto bg-orange-500 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:bg-orange-600 transition-all shadow-xl hover:shadow-orange-200 text-base sm:text-lg font-semibold transform hover:-translate-y-0.5">
-                Start Your Journey
-              </button>
-              <button className="w-full sm:w-auto bg-white text-orange-500 px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:bg-orange-50 transition-all border-2 border-orange-200 text-base sm:text-lg font-semibold transform hover:-translate-y-0.5">
-                Watch Demo
-              </button>
+              <Link href="/chat" className="w-full sm:w-auto">
+                <button className="w-full group bg-orange-500 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:bg-orange-600 transition-all shadow-xl hover:shadow-orange-200 text-base sm:text-lg font-semibold transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                  Start Your Journey
+                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+              </Link>
+              <a 
+                href="https://github.com/varunisrani/gitaaii" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto"
+              >
+                <button className="w-full flex items-center justify-center gap-2 bg-white text-orange-500 px-8 sm:px-10 py-4 sm:py-5 rounded-full hover:bg-orange-50 transition-all border-2 border-orange-200 text-base sm:text-lg font-semibold transform hover:-translate-y-0.5 group">
+                  <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/>
+                  </svg>
+                  GitHub
+                </button>
+              </a>
+            </div>
+
+            {/* Stats or Trust Indicators */}
+            <div className="mt-12 sm:mt-16 flex flex-wrap justify-center gap-8 text-center">
+              <div className="px-4">
+                <div className="text-2xl sm:text-3xl font-bold text-orange-500 mb-1">1000+</div>
+                <div className="text-sm text-gray-600">Spiritual Conversations</div>
+              </div>
+              <div className="px-4">
+                <div className="text-2xl sm:text-3xl font-bold text-orange-500 mb-1">24/7</div>
+                <div className="text-sm text-gray-600">Divine Guidance</div>
+              </div>
+              <div className="px-4">
+                <div className="text-2xl sm:text-3xl font-bold text-orange-500 mb-1">100%</div>
+                <div className="text-sm text-gray-600">Open Source</div>
+              </div>
             </div>
           </div>
         </section>
@@ -93,29 +144,105 @@ export default function Home() {
         <section className="py-16 sm:py-20 px-4 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600"></div>
           <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/0"></div>
+          
           <div className="max-w-4xl mx-auto text-center relative z-10 px-4">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8 text-white">Transform Your Life with Divine Guidance</h2>
-            <p className="text-lg sm:text-xl mb-8 sm:mb-12 text-orange-100">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-white text-sm font-medium mb-6 backdrop-blur-sm">
+              <span className="text-xl">🕉️</span>
+              <span>Join Our Community</span>
+            </div>
+            
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 text-white">
+              Transform Your Life with 
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-200 to-orange-100 ml-2">
+                Divine Guidance
+              </span>
+            </h2>
+            
+            <p className="text-lg sm:text-xl mb-8 sm:mb-12 text-orange-100/90 max-w-2xl mx-auto leading-relaxed">
               Join thousands of seekers who have discovered their path through ancient wisdom and modern technology.
             </p>
-            <button className="w-full sm:w-auto bg-white text-orange-500 px-8 sm:px-12 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold hover:bg-orange-50 transition-all shadow-xl hover:shadow-orange-700/20 transform hover:-translate-y-0.5">
-              Begin Your Spiritual Journey
-            </button>
+            
+            <Link href="/chat">
+              <button className="group bg-white text-orange-500 px-8 sm:px-12 py-4 sm:py-5 rounded-full text-base sm:text-lg font-semibold hover:bg-orange-50 transition-all shadow-xl hover:shadow-black/20 transform hover:-translate-y-0.5 flex items-center gap-3 mx-auto">
+                Begin Your Spiritual Journey
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </button>
+            </Link>
           </div>
         </section>
       </main>
 
-      <footer className="bg-white border-t border-orange-100 px-4 sm:px-8 py-8 sm:py-12">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6 sm:gap-8">
-          <div className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
-            Gita AI
+      <footer className="bg-white border-t border-orange-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Top Footer */}
+          <div className="py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Brand Section */}
+            <div className="space-y-4">
+              <div className="text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
+                Gita AI
+              </div>
+              <p className="text-gray-600 text-sm max-w-xs">
+                Experience divine wisdom through the power of artificial intelligence and ancient teachings.
+              </p>
+            </div>
+            
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-gray-900 font-semibold mb-4">Quick Links</h3>
+              <ul className="space-y-3">
+                <li><a href="#features" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">Features</a></li>
+                <li><a href="#about" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">About</a></li>
+                <li><a href="#pricing" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">Pricing</a></li>
+              </ul>
+            </div>
+            
+            {/* Resources */}
+            <div>
+              <h3 className="text-gray-900 font-semibold mb-4">Resources</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">Documentation</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">API</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">Privacy Policy</a></li>
+              </ul>
+            </div>
+            
+            {/* Community */}
+            <div>
+              <h3 className="text-gray-900 font-semibold mb-4">Community</h3>
+              <ul className="space-y-3">
+                <li>
+                  <a 
+                    href="https://github.com/varunisrani/gitaaii" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-600 hover:text-orange-500 transition-colors text-sm inline-flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/>
+                    </svg>
+                    GitHub
+                  </a>
+                </li>
+                <li><a href="#" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">Discord</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">Twitter</a></li>
+              </ul>
+            </div>
           </div>
-          <div className="flex gap-6 sm:gap-8 text-gray-600">
-            <a href="#" className="hover:text-orange-500 transition-colors text-sm">Privacy</a>
-            <a href="#" className="hover:text-orange-500 transition-colors text-sm">Terms</a>
-            <a href="#" className="hover:text-orange-500 transition-colors text-sm">Contact</a>
+          
+          {/* Bottom Footer */}
+          <div className="py-6 border-t border-orange-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="text-gray-600 text-sm">
+              © 2024 Gita AI. Open source project with ❤️
+            </div>
+            <div className="flex gap-6">
+              <a href="#" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">Terms</a>
+              <a href="#" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">Privacy</a>
+              <a href="#" className="text-gray-600 hover:text-orange-500 transition-colors text-sm">Contact</a>
+            </div>
           </div>
-          <div className="text-gray-500 text-sm">© 2024 Gita AI. All rights reserved.</div>
         </div>
       </footer>
     </div>
