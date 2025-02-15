@@ -44,11 +44,11 @@ export default function Home() {
 
             {/* Main Title */}
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 sm:mb-8 tracking-tight">
-              <div className="flex flex-col items-center gap-2 sm:gap-3">
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400">
+              <div className="inline-flex flex-col items-center">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400 leading-tight mb-3">
                   Experience Divine Guidance
                 </span>
-                <span className="text-3xl sm:text-4xl lg:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-orange-400 font-bold">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-orange-400 leading-tight text-[0.8em] sm:text-[0.7em]">
                   Through Advanced AI
                 </span>
               </div>
