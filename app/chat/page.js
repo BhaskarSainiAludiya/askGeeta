@@ -610,6 +610,19 @@ Remember: Be brief and energetic. Only expand for questions about devotion or ch
                     {getPersonaEmoji()}
                   </span>
                 </div>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => window.open(`mailto:solovpxoffical@gmail.com?subject=Feedback%20for%20Gita%20AI&body=Dear%20Team,%0A%0AI%20would%20like%20to%20share%20my%20feedback%20about%20my%20experience%20with%20Gita%20AI:%0A%0A`, '_blank')}
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-${getPersonaColor()}-50 border border-${getPersonaColor()}-200 hover:bg-${getPersonaColor()}-100 hover:border-${getPersonaColor()}-300 transition-all group shadow-sm`}
+                >
+                  <svg className={`w-4 h-4 text-${getPersonaColor()}-600 group-hover:scale-110 transition-transform`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"/>
+                  </svg>
+                  <span className={`text-sm font-medium text-${getPersonaColor()}-600`}>
+                    Share Feedback
+                  </span>
+                </motion.button>
               </div>
               <motion.button
                 whileHover={{ scale: 1.02 }}

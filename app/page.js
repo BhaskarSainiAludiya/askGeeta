@@ -21,6 +21,17 @@ export default function Home() {
             <a href="#features" className="text-gray-600 hover:text-orange-500 transition-colors text-sm font-medium">Features</a>
             <a href="#about" className="text-gray-600 hover:text-orange-500 transition-colors text-sm font-medium">About</a>
             <a href="#pricing" className="text-gray-600 hover:text-orange-500 transition-colors text-sm font-medium">Pricing</a>
+            <a 
+              href="mailto:solovpxoffical@gmail.com?subject=Feedback%20for%20Gita%20AI&body=Dear%20Team,%0A%0AI%20would%20like%20to%20share%20my%20feedback%20about%20Gita%20AI:%0A%0A" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-50 border border-orange-200 text-orange-600 hover:bg-orange-100 hover:border-orange-300 transition-all text-sm font-medium group"
+            >
+              <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"/>
+              </svg>
+              Share Feedback
+            </a>
             <Link href="/chat" className="bg-orange-500 text-white px-6 py-2.5 rounded-full hover:bg-orange-600 transition-all shadow-lg hover:shadow-orange-200 text-sm font-medium">
               Get Started
             </Link>
